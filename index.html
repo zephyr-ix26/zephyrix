@@ -322,6 +322,7 @@
       transition: opacity .28s ease, visibility .28s ease;
     }
     .logo-reveal.open { opacity: 1; visibility: visible; }
+    .logo-reveal.submission-playback .close-reveal { display: none; }
     .logo-reveal-dialog {
       position: relative; width: 100vw; height: 100dvh;
       overflow: hidden; border: 0;
@@ -443,7 +444,7 @@
     </div>
   </header>
 
-  <div class="logo-reveal" id="logo-reveal" role="dialog" aria-modal="true" aria-label="Zephyrix logo animation" aria-hidden="true" inert>
+  <div class="logo-reveal" id="logo-reveal" role="dialog" aria-modal="true" aria-label="Zephyrix logo animation" aria-hidden="true" tabindex="-1" inert>
     <div class="logo-reveal-dialog">
       <button class="close-reveal" id="close-reveal" type="button" aria-label="Close logo animation">
         <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBoZWlnaHQ9IjE2cHgiIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2cHgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8cGF0aCBkPSJtIDQgNCBoIDEgaCAwLjAzMTI1IGMgMC4yNTM5MDYgMC4wMTE3MTkgMC41MTE3MTkgMC4xMjg5MDYgMC42ODc1IDAuMzEyNSBsIDIuMjgxMjUgMi4yODEyNSBsIDIuMzEyNSAtMi4yODEyNSBjIDAuMjY1NjI1IC0wLjIzMDQ2OSAwLjQ0NTMxMiAtMC4zMDQ2ODggMC42ODc1IC0wLjMxMjUgaCAxIHYgMSBjIDAgMC4yODUxNTYgLTAuMDM1MTU2IDAuNTUwNzgxIC0wLjI1IDAuNzUgbCAtMi4yODEyNSAyLjI4MTI1IGwgMi4yNSAyLjI1IGMgMC4xODc1IDAuMTg3NSAwLjI4MTI1IDAuNDUzMTI1IDAuMjgxMjUgMC43MTg3NSB2IDEgaCAtMSBjIC0wLjI2NTYyNSAwIC0wLjUzMTI1IC0wLjA5Mzc1IC0wLjcxODc1IC0wLjI4MTI1IGwgLTIuMjgxMjUgLTIuMjgxMjUgbCAtMi4yODEyNSAyLjI4MTI1IGMgLTAuMTg3NSAwLjE4NzUgLTAuNDUzMTI1IDAuMjgxMjUgLTAuNzE4NzUgMC4yODEyNSBoIC0xIHYgLTEgYyAwIC0wLjI2NTYyNSAwLjA5Mzc1IC0wLjUzMTI1IDAuMjgxMjUgLTAuNzE4NzUgbCAyLjI4MTI1IC0yLjI1IGwgLTIuMjgxMjUgLTIuMjgxMjUgYyAtMC4yMTA5MzggLTAuMTk1MzEyIC0wLjMwNDY4OCAtMC40Njg3NSAtMC4yODEyNSAtMC43NSB6IG0gMCAwIiBmaWxsPSIjMmUzNDM2Ii8+Cjwvc3ZnPgo=" alt="">
@@ -637,6 +638,7 @@
       const mobileError = document.querySelector('#mobile-error');
       let revealCloseTimer;
       let successCloseTimer;
+      let submissionPlayback = false;
       let successAudioContext;
       let lastSubmissionAt = 0;
 
@@ -659,7 +661,8 @@
         logoVideo.muted = false;
         const playback = logoVideo.play();
         if (playback) playback.catch(() => { logoVideo.controls = true; });
-        closeRevealButton.focus();
+        if (submissionPlayback) logoReveal.focus({ preventScroll: true });
+        else closeRevealButton.focus();
       };
       const closeLogoReveal = () => {
         logoReveal.classList.remove('open');
@@ -738,6 +741,13 @@
       logoVideo.addEventListener('error', () => {
         logoVideo.controls = true;
         closeRevealButton.setAttribute('aria-label', 'Close animation. Video could not be loaded.');
+      });
+      logoVideo.addEventListener('ended', () => {
+        if (!submissionPlayback) return;
+        submissionPlayback = false;
+        logoReveal.classList.remove('submission-playback');
+        closeLogoReveal();
+        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 120);
       });
       document.addEventListener('keydown', event => {
         if (event.key !== 'Escape') return;
@@ -874,7 +884,9 @@
         window.history.replaceState({}, '', window.location.pathname + window.location.hash);
         formStatus.textContent = 'Enquiry sent successfully.';
         formStatus.classList.add('success');
-        window.setTimeout(openSuccessReveal, 180);
+        submissionPlayback = true;
+        logoReveal.classList.add('submission-playback');
+        window.setTimeout(openLogoReveal, 180);
       }
 
       document.querySelector('#year').textContent = new Date().getFullYear();
