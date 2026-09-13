@@ -915,13 +915,13 @@
           }
 
           if (!response.ok || result.success === false) {
-            throw new Error(result.message || 'FormSubmit rejected the enquiry.');
+            throw new Error(result.message || 'Zephyrix could not send the enquiry.');
           }
 
           formStatus.textContent = 'Enquiry sent successfully.';
           formStatus.classList.add('success');
 
-          // Stay on the Zephyrix website. No FormSubmit page or redirect.
+          // Stay on the Zephyrix website. No external form page or redirect.
           submissionPlayback = true;
           logoReveal.classList.add('submission-playback');
           window.setTimeout(openSuccessReveal, 120);
