@@ -73,8 +73,8 @@
     .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
     .brand { display: inline-flex; align-items: center; gap: 12px; flex: 0 0 auto; }
     .logo-trigger {
-      position: relative; width: auto; height: 56px; padding: 0 4px;
-      display: inline-flex; align-items: center; justify-content: flex-start; gap: 13px;
+      position: relative; width: 166px; height: 56px; padding: 0;
+      display: inline-flex; align-items: center; justify-content: flex-start;
       border: 0; border-radius: 0; background: transparent;
       color: #f7f9ff; cursor: pointer; overflow: visible;
       box-shadow: none;
@@ -91,13 +91,7 @@
       transition: transform .55s ease;
     }
     .logo-trigger:hover::after { transform: translateX(70%) rotate(8deg); }
-    .brand-symbol { width: 43px; height: 43px; display: block; flex: 0 0 43px; overflow: visible; }
-    .brand-wordmark {
-      display: block; padding-left: 1px;
-      color: #f7f9ff; font-size: .88rem; font-weight: 760;
-      line-height: 1; letter-spacing: .31em; white-space: nowrap;
-      transform: translateY(1px);
-    }
+    .brand-wordmark-image { width: 160px; height: auto; display: block; object-fit: contain; }
     .brand-name { display: block; font-size: .94rem; font-weight: 850; letter-spacing: .13em; }
     .brand-tag { display: block; margin-top: 1px; color: var(--muted); font-size: .6rem; font-weight: 650; letter-spacing: .08em; }
     .nav-links { display: flex; align-items: center; gap: 28px; color: #bac6d5; font-size: .88rem; font-weight: 650; }
@@ -403,9 +397,8 @@
       .contact-panel { padding: 26px 18px; border-radius: 22px; }
       .lead-form { padding: 22px 16px; }
       .footer-inner { flex-direction: column; align-items: flex-start; }
-      .logo-trigger { width: auto; height: 48px; gap: 10px; padding: 0 2px; }
-      .brand-symbol { width: 37px; height: 37px; flex-basis: 37px; }
-      .brand-wordmark { font-size: .76rem; letter-spacing: .25em; }
+      .logo-trigger { width: 148px; height: 48px; padding: 0; }
+      .brand-wordmark-image { width: 142px; }
       .logo-reveal { padding: 0; }
       .logo-reveal-dialog { border-radius: 0; }
       .close-reveal {
@@ -430,20 +423,7 @@
     <div class="nav container">
       <div class="brand">
         <button class="logo-trigger" id="logo-trigger" type="button" aria-haspopup="dialog" aria-controls="logo-reveal" aria-expanded="false" aria-label="Play Zephyrix logo animation">
-          <svg class="brand-symbol" viewBox="0 0 52 52" aria-hidden="true">
-            <defs>
-              <linearGradient id="brand-gradient" x1="6" y1="6" x2="45" y2="46" gradientUnits="userSpaceOnUse">
-                <stop offset="0" stop-color="#66a7ff"/>
-                <stop offset=".48" stop-color="#7b6cff"/>
-                <stop offset="1" stop-color="#a45cff"/>
-              </linearGradient>
-            </defs>
-            <path fill="url(#brand-gradient)" d="M10 7h36l-8.2 10.1H2L10 7Z"/>
-            <path fill="url(#brand-gradient)" d="M33.8 14.2H46L18.2 46H5.8l28-31.8Z"/>
-            <path fill="url(#brand-gradient)" d="M5.5 34.7h25.6L22.7 45H-2.8l8.3-10.3Z"/>
-            <path fill="#f7f9ff" d="m34.2 31.8 6.3-7.2v8.1l-6.3 7.2v-8.1Zm-8 13.2h10.6l-4.1 5H22l4.2-5Z" opacity=".96"/>
-          </svg>
-          <span class="brand-wordmark">ZEPHYRIX</span>
+          <img class="brand-wordmark-image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJEAAAANCAYAAACpfIwbAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAD/AP8A/6C9p5MAAAAJcEhZcwAAAAEAAAABAE8lxNYAAAAHdElNRQfqCQ0GMxxglm0lAAAN7UlEQVRYw52Ze5QU9ZXHP79fVVd19/QwQCSIgrABUREIL+PZzYqiIEZXORtf7MIMD/HsWWFZFiS+jpG4GogRNGazeQAhPnBEBom6ICryEkUQGQSGhwIDzCgBDvMAZpiu6qq7f1RXTXfPYDypOXW6px73d5/f+72/Vnfd/a8yZswYMpkMhmEAoJSi8NBa4zgOT875qTpx4gRKKUQEABFBlMJxHHr3vpzHH39cEokEIoJSql15sViM6upqnn5qrmpqakJpQWuN7/uRTM/zcF2XadOmycCBA/F9v408rTVnzpxh84cfs3r1apXxHGKxWCQD/EC/rK6u6zJy5EiZPHkyu3btYsGC55XrumgdScR1Xfr37y+zZ8/GcVqYM2eOOn78OKZp5qytUUrheR5jx46VO+64g7q6Oub98hl1+NAh4pYdreukmxh1860yYcIEPM/jqaeeUl9+sR8zFsMwYpEtSilaWlq49dZb5b77JuH7Pp7nkU6nUUrhui6gaW5uZt++KsrLy1VDwxksywLRebHzdSay9/rrr5dp/z6No0ePMm/uM+rcuXN5awIoHeh614/LpHfv3rSc7cjrr79Ode0WFYvFwKjHcRwSXS9h6tSpIt2+R3V1NSsW/Eoxd958+bZH5c4q6frdbiTiRRQli0kmUiTiRSTiRVh2EoAbRtz8reUdq/mL9OhxObZdQlGqE0WpTiSLOpIs6kgiWYJlp7DjxXz08affSt5LL70uJR27EE90IJEsyZ7FxBMp4okUiWQxSsd49LGfiojIx1u2SYeSizDMBGYsnj2TgMnoW24XEZHm844MHnKNGKYdybLjRdEalp2i/4AhcuhwjYiILFvxppjxFJadIpEsAWVxxZUDqD7ylYiILFr8kiSSJWjDwrKTkY12vBjLTgEw+yePfSt7N276SHr3uQrDTBCPd8w7rWQKK5kCbfKfs2aLiMiXB4/KpZf2Jh7vSDLZmUSiE4lEJ5LJzhSlOmHHi7n2B6Plf3/zqixfulvmz10lJR16YujvYFoGRkzzk5//XD798ktZWrlfLrvln4VYJ8yKigqOHTuG7/uYponWGsMwcJwW+vfvz/jx4ylOJTh0+Cj3338fp06dIh6PR5Wdi0hKxzhwYJ+aOGmKiATIEovFME0T3/ej5wAMI0Z9fT2NZ+rRBnloESII+Liuz9NPP83f9ewZVSRAzLbRWfjo168fEydOpLT0bjZ/tEEWLlyobNtug37hu+E6zc3NgI9parTWiAgBECq0BgEcx8nqa+QhZS4S7tm9Qz3wwANSUVHBPT++gz2PPCL/PWeOisXjdOzYgV//+lfSq+clvPf+BmbNmqXS6TSxWCwHKUEpI6ukxapVqzhVdwrXdTGzCGkaFkopLMuiS5culJWVMfy6f2DWrP+SGTNmqFB/wQv0ksBehUJn3d7U1ITjOIENKtcOhfg+WsOn27copT258+Zf0KfPPzL9vj/I/Ofmq2ZvG5MmT5arR5eypaaReX/4PV9v26uImZifbd+qPtu+BQhh2gAy9Ln8SsrKyqQ4laD6SA2lpaVs375dJePxdoOjgHg8zunTp3nxT4vb9q+2bwEGiWRRXmBzP5VSmKbJ6lWrFAha6db2CWjDQEQwDIPu3bvL7f80muuuu47Fixfjum4U+PCdMAEiyM9JbM/zyGQy2SRyg/Vz9GnvCO9Zdop316xRc+fOlaefeoIHH3yQqqoqeaOiQv3sF/Nk1MgRHDx0jBkzZqjGhgbseBwRr31ZlsWBAwfU3r27szfC5zSooMBFhMbGRnluwS8ZOnQoHTt2pLGhCa11XlHn2hraG9joo7SKfBw8R7T+zp071cVFH0lxcTEjRoygtrZWTrldmTx5Mnuam6moqODrDz5Q2DakFaY2zCB1slzDcdNceUV/VqxcIf2u6suxmq8ZN24cO3bsUEVFRYiXb3yotFIK3/fRWtPlu90iThMiTK7CYQX7vo/jZLJO9LL3pcB4ASUgrVwpWDNYDwlrz4/ktjqmFXny+Fv2eyKRoEePHtLS0qJydU2n03To0CG7vIn4Rja5dLROri6GYWDH4yxYsEANHDxI7r1zDE8+OYchQwbJ9P94gJZ0hunTp7Nv717iWa7YthDDa7rgjpH1iYHWBqYZI5PJkMgirfguXiYdIEte6epsoepIpu/7AVIpPyu3ndLWAdp/uO1/1MU9T0jCvJ+7x4zlw73d+erYRXxyYC2bXvs/hVMHSmF7TZi5gXXcFq68oj/l5eXS76q+EQJt3bpVpVIpvIIEyk0kRQD9Q4cOlSVLlkQtLKzwwiDGYjH27NnDtGnTVXNzc1QJhZXkeR633HKL9LrsMsIWaRgGymglz3369OHGG28EYNOmTfi+j23beS03+sxJomHDhrF27Vq01pK7biaTwTRNMh4RehW2sVzbw8RNp9M89thjasCAAXL1FZdz9UOzAZgzZw5r1qxRyaKivCRu73Bdl+HDh8vI0SODVuoF6OF5QVHats2ll17K2HvuAmDNmjU0NjYSs/IR/W85wqFFa42TdnjrrbeU7Q6VYcOG0bdvX1avXs1LG19RiIBhQNgtDCMWOKDlLH17X8Gy8tdk4OCr+eLAQSZNmsQn27apRCKB6wYQry+gQBhgy7Lo2rUr8Wzba8+okH+dOHECz3OzKGRmK8fPe84wYsyc+SCjRl7/jQ5IOx4LFy3hlVdeUeF0Vuig7Jfoezj9FSZDsHarXQFKeW1aEICHZP88rITF0cPVPPrQw7z88osUpxKs/PPbvPDCCxFH+2tB9j2HUaNG8ehDD35zxAV+/7uFPP/8fBWL6TzdWlE/9GfoUz86W9VQOSdZhAefr+g38IdySR+DnV+8y4Ar7+PGYRN5/4OVcryhQVlF56KCMH3fJ+O20LtXH5YtWyYDB1/NkUM13HvvvezatUulOnRog0CFrSn837Ztqqqq1PDhw6Pq1lq3eTc8m5qaVC5ZvlBlmGbQcndU7qGyshLf9wnG8oBM1tfXs27dWjZu3Kh838eyrDb8JzdRQp2qqqooLS1VZ8+eBYhGeMdxuOGGG+Xll1+M2vQ3JUBov9aaRCLBJ598og4ePCiDBw1gy5YtnG9uJpFM5XGwC9kMOvL3ka9qWbJwCefOneNHP7qNkTcNx3Fh4cKFvPziEiorK5U2vAg1L3SEa4W2F3Kn/IFDaGlpoW/vnkyZMoXOqcEsX76cXbt2ce2132fmzJk88cQTNKdbt1LMjOvwvd59ea18qQwa+n0Of1nNuHHj2Pn5DqWVyZkzZ7J8JOij8Zypp3CvyPf9YA8jIIXfglyDGYtH+1NBMPLl5gb91VdfZf6zc1Xo7Fb+EOinDQvTNNsNdnt7Vr7vc+LECc6fPx/97/s+vufQ0NCA1mCYCm20JnSh7NwAZDIZtIT8I7gfTIAXboeFOoIfPXuk+hjPPvusam46w7Jly1m8eLGMvnkEN910E+XlS3E9jw7JJJlMpkBGfsKH/rVtG9u2I50KfQPguM2kiouYPPFRwb+Y3dtPsvG9/VjJfXTpOo7L+/49M+9/RuY9d49SnkbZJzF7XNaT8vJyGXbNIBDYvHkz/fr1o//AAeJ5Hl5OD29oaGDte++pcGMyb8zPOqpz587cdlup2LadR7rb1JvW1NfXs3LlSpVOpzFNo43xofPDlhM617KTrSNxFEg/b60LJZLneXk8J7cyIz7gZfLez02+Vk6THSaioGWRDxW1diCboPnbIbnvFyZjuIkZXisqKkIpRV1dHVOmTFGLFi2S0TePYNmyZYwfP142rF+rkskkuTXbOnxINL2G10N7C/2jdYCAhmEwYcIE6datG6dPn2b58vc5fOKw0ri88847YsYuZsiQIUycOFH+uOSPylYK87e//Y384JpBWUugbFIpZZNK262UXbv38+HGjbiuGwUg93DSLfTq1UsWLfzdX606gK+Pn2Tjxo3U1tZiGK14HDrA8zy0VhG/MsNNE+WDygZKNCBoFLlukTCRcpwZEOvWqjVNi2DAa50KQ4QTEbQKqjewU0cBltxJUUJ9c/lU0FLDNULEzCfV4fQUBh4K89627Syp9jCMGCdPnqSsrEwtXbpURt40nJUr3+TuO++UdevWKSvaepGcM5CpzKDtWIkkrutl7S2chDUiPvfe+W9y/Q/H8JcDPXj33Xf5bN+HKoYJ8c/4tOoz9Z2LiiWZHMm/3PEz6mu7yZtrH1FmTU0NK//8NkqyFRRWGCr7SZShhw8fxnXdPGdFWa0UShs0Njaq5RUrxbKsPD6Tm/HhhFVTU4PjOMG0VVDpobN932fTpk1oDdXV1ZCDHIVHe9fyEkuCUbmqqooVb7xNZWVl9F4wuIV7SYqTJ0+y4o238TyPs2fPqnwUabtmrv6O47B+/Xpqamo4cuQIKP2NOuYL1Ozfv591mzazdevWiB+FE21dXR1Tp05VDz/8sHTv3p2xY8eye/duTtfX5/1s1QpsmtraWip37+Pzzz+PAKCwrXueR5cuXejatSubN2/m+P7urN+8PpCHiopxw4YNKh6PS91JuP3229lf8ydRStu0R4DDQOVCn1IK/HyojxIpB/JD+G9PbqHDw/G/TRJ54e5PsH6YjEp7EQLl6qFpnw9IO+0tQDgz9HFBkuk8Ml242/5NSdDe+qF/2uNUFyLqWmswgwlW3ACRFbHoXiaTieTFLYt0Oo1PSCtCRG9NFNM0icVsXNeNQKBQj2g69UuCeJ7vjOd7YH0V7OkZwe9tfiaObdvE/G6UlJRIc/qk+n/Jpl1D6dgHegAAAABJRU5ErkJggg==" alt="Zephyrix">
         </button>
       </div>
       <nav class="nav-links" id="primary-navigation" aria-label="Primary navigation">
