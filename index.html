@@ -687,33 +687,44 @@
         closeLogoReveal();
         window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 120);
       };
-      const prepareSuccessSound = () => {
+      const prepareSuccessSound = async () => {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return;
-        if (!successAudioContext) successAudioContext = new AudioContextClass();
-        if (successAudioContext.state === 'suspended') successAudioContext.resume();
+        if (!AudioContextClass) return false;
+        try {
+          if (!successAudioContext) successAudioContext = new AudioContextClass();
+          if (successAudioContext.state === 'suspended') await successAudioContext.resume();
+          return successAudioContext.state === 'running';
+        } catch (error) {
+          console.warn('Success sound could not be prepared:', error);
+          return false;
+        }
       };
-      const playSuccessSound = () => {
-        if (!successAudioContext || successAudioContext.state !== 'running') return;
-        const start = successAudioContext.currentTime;
-        const master = successAudioContext.createGain();
-        master.gain.setValueAtTime(.0001, start);
-        master.gain.exponentialRampToValueAtTime(.12, start + .035);
-        master.gain.exponentialRampToValueAtTime(.0001, start + 1.15);
-        master.connect(successAudioContext.destination);
+
+      const playSuccessSound = async () => {
+        const ready = await prepareSuccessSound();
+        if (!ready) return;
+
+        const ctx = successAudioContext;
+        const start = ctx.currentTime + 0.01;
+        const master = ctx.createGain();
+        master.gain.setValueAtTime(0.0001, start);
+        master.gain.exponentialRampToValueAtTime(0.18, start + 0.035);
+        master.gain.exponentialRampToValueAtTime(0.0001, start + 1.25);
+        master.connect(ctx.destination);
+
         [392, 523.25, 783.99].forEach((frequency, index) => {
-          const oscillator = successAudioContext.createOscillator();
-          const gain = successAudioContext.createGain();
-          const noteStart = start + (index * .13);
+          const oscillator = ctx.createOscillator();
+          const gain = ctx.createGain();
+          const noteStart = start + index * 0.13;
           oscillator.type = index === 2 ? 'sine' : 'triangle';
           oscillator.frequency.setValueAtTime(frequency, noteStart);
-          gain.gain.setValueAtTime(.0001, noteStart);
-          gain.gain.exponentialRampToValueAtTime(.36, noteStart + .025);
-          gain.gain.exponentialRampToValueAtTime(.0001, noteStart + .48);
+          gain.gain.setValueAtTime(0.0001, noteStart);
+          gain.gain.exponentialRampToValueAtTime(0.42, noteStart + 0.025);
+          gain.gain.exponentialRampToValueAtTime(0.0001, noteStart + 0.5);
           oscillator.connect(gain);
           gain.connect(master);
           oscillator.start(noteStart);
-          oscillator.stop(noteStart + .5);
+          oscillator.stop(noteStart + 0.52);
         });
       };
       const openSuccessReveal = () => {
@@ -880,8 +891,10 @@
         returnUrl.hash = '';
         formNextInput.value = returnUrl.href;
 
+        // Unlock/resume the audio context directly from the user's submit gesture.
+        // Do not delay this call: browsers may block delayed audio after navigation.
         prepareSuccessSound();
-        window.setTimeout(playSuccessSound, 40);
+        playSuccessSound();
         submitButton.disabled = true;
         submitLabel.textContent = 'Encrypting & sending…';
         formStatus.textContent = 'Validated. Opening secure delivery verification…';
