@@ -657,7 +657,16 @@
         logoVideo.currentTime = 0;
         logoVideo.muted = false;
         const playback = logoVideo.play();
-        if (playback) playback.catch(() => { logoVideo.controls = true; });
+        if (playback) playback.catch(() => {
+          if (!submissionPlayback) {
+            logoVideo.controls = true;
+            return;
+          }
+          logoVideo.controls = false;
+          logoVideo.muted = true;
+          const mutedPlayback = logoVideo.play();
+          if (mutedPlayback) mutedPlayback.catch(finishSubmissionPlayback);
+        });
         if (submissionPlayback) logoReveal.focus({ preventScroll: true });
         else closeRevealButton.focus();
       };
@@ -670,6 +679,13 @@
         logoVideo.pause();
         logoVideo.currentTime = 0;
         revealCloseTimer = window.setTimeout(() => logoTrigger.focus(), 280);
+      };
+      const finishSubmissionPlayback = () => {
+        if (!submissionPlayback) return;
+        submissionPlayback = false;
+        logoReveal.classList.remove('submission-playback');
+        closeLogoReveal();
+        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 120);
       };
       const prepareSuccessSound = () => {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -729,25 +745,25 @@
       logoTrigger.addEventListener('click', openLogoReveal);
       closeRevealButton.addEventListener('click', closeLogoReveal);
       logoReveal.addEventListener('click', event => {
-        if (event.target === logoReveal) closeLogoReveal();
+        if (!submissionPlayback && event.target === logoReveal) closeLogoReveal();
       });
       successReturn.addEventListener('click', closeSuccessReveal);
       successReveal.addEventListener('click', event => {
         if (event.target === successReveal) closeSuccessReveal();
       });
       logoVideo.addEventListener('error', () => {
-        logoVideo.controls = true;
-        closeRevealButton.setAttribute('aria-label', 'Close animation. Video could not be loaded.');
+        if (submissionPlayback) {
+          logoVideo.controls = false;
+          finishSubmissionPlayback();
+        } else {
+          logoVideo.controls = true;
+          closeRevealButton.setAttribute('aria-label', 'Close animation. Video could not be loaded.');
+        }
       });
-      logoVideo.addEventListener('ended', () => {
-        if (!submissionPlayback) return;
-        submissionPlayback = false;
-        logoReveal.classList.remove('submission-playback');
-        closeLogoReveal();
-        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 120);
-      });
+      logoVideo.addEventListener('ended', finishSubmissionPlayback);
       document.addEventListener('keydown', event => {
         if (event.key !== 'Escape') return;
+        if (submissionPlayback) return;
         if (successReveal.classList.contains('open')) closeSuccessReveal();
         else if (logoReveal.classList.contains('open')) closeLogoReveal();
         else closeMenu();
